@@ -48,7 +48,7 @@ class Data {
             end_time: end_time,
             speed_mode: speed_mode
         }
-        this.speed_report = [...speed_report, obj];
+        this.speed_report = [...this.speed_report, obj];
     }
 
     get_NPCs_list() {
@@ -61,7 +61,7 @@ class Data {
             NPC: NPC,
             complete: complete
         }
-        this.NPCs = [...NPCs, obj];
+        this.NPCs = [...this.NPCs, obj];
     }
 
     get_collisions() {
@@ -74,10 +74,11 @@ class Data {
             end_time: end_time,
             object: object
         }
-        this.collisions = [...collisions, obj];
+        this.collisions = [...this.collisions, obj];
     }
 
-    // process data will process all data in raw and generate aggregated data, can be overwritten any time
+    // process data will process all data in raw and generate aggregated data,
+    // can be overwritten any time
     process(todo_status) {
         this.input_aggregate.num_inputs = this.time_stamps.length;
         this.input_aggregate.max_time_input = 0;
