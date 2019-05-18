@@ -1,6 +1,5 @@
 function Car0(scene, camera) {
 
-
     sphere = BABYLON.Mesh.CreateBox("sphere1", 2, scene);
     sphere.isVisible = true;
     car = BABYLON.Mesh.CreateBox("car", 2, scene);
@@ -294,7 +293,9 @@ function Car0(scene, camera) {
         timer = 0;
     });
 
-    var currentTime = 0.0
+    var currentTime = 0.0;
+
+    var loggedData = new Data("temp", "todo list", false);
 
 
     this.update = function () {
@@ -477,6 +478,8 @@ function Car0(scene, camera) {
             if (closestCollider != hitInfo1.pickedMesh) {
                 console.log("hit");
                 closestCollider = hitInfo1.pickedMesh;
+                loggedData.log_NPC(currentTime, closestCollider.pickUpId, true);
+                console.log(loggedData.NPCs)
 
                 var matrix = carTarget.getWorldMatrix().m;
 
@@ -544,6 +547,9 @@ function Car0(scene, camera) {
                 console.log("hitPerson");
                 closestColliderPerson = hitInfoPerson.pickedMesh;
                 previousPerson = hitInfoPerson.pickedMesh;
+
+                loggedData.log_NPC(currentTime, closestColliderPerson.personName, true);
+                console.log(loggedData.NPCs)
 
                 var matrix = carTarget.getWorldMatrix().m;
 
@@ -649,5 +655,7 @@ function Car0(scene, camera) {
                 }
             }
         }
+
+        currentTime += engine.getDeltaTime() / 1000;
     }
 }
