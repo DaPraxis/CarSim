@@ -553,6 +553,11 @@ function Car0(scene, camera) {
                         gameOver = gameOver && todoList.children[i].classList.contains("crossOut");
                     }
                     if (gameOver) {
+                        loggedData.process(true);
+                        
+                        // TODO: send loggedData via API
+                        console.log(loggedData);
+
                         location.reload();
                     }
                     //speed = maxSpeed;
