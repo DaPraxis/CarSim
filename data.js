@@ -81,10 +81,17 @@ class Data {
     // can be overwritten any time
     process(todo_status) {
         this.input_aggregate.num_inputs = this.time_stamps.length;
-        this.input_aggregate.max_time_input = 0;
-        for (let temp of this.time_stamps) {
-            this.input_aggregate.max_time_input += temp.end_time - temp.start_time;
-        }
+        maxTime = 0
+        if (len(this.time_stamps) >= 2) {
+            for (let i = 1; i < len(this.time_stamps); i += 1) {
+                timeBetween = this.time_stamps[i].start_time - this.time_stamps[i - 1].end_time;
+                if (timeBetween > maxTime) {
+                    maxTime = timeBetween;
+                }
+            }
+        } 
+        this.input_aggregate.max_time_without_input = maxTime;
+        
         this.input_aggregate.collisions = this.collisions.length;
 
         this.input_aggregate.collision_time = 0;
