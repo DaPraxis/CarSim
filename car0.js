@@ -293,9 +293,22 @@ function Car0(scene, camera) {
         timer = 0;
     });
 
+
+    // game system time >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     var currentTime = 0.0;
 
     var loggedData = new Data("temp", "todo list", false);
+
+    var startDirTime = 0.0;
+
+    var endDirTime = 0.0;
+
+    var currentDir = undefined;
+
+    var nextDir = undefined;
+
+    var startPosition; 
+
 
 
     this.update = function () {
@@ -349,20 +362,23 @@ function Car0(scene, camera) {
         if (map["a"]) {
             direction_name = "Left";
             timer = 0;
+            nextDir = "Left";
         }
 
         if (map["d"]) {
             direction_name = "Right";
             timer = 0;
+            nextDir = "Right";
         }
 
         if (map["c"] || map["w"]) {
             speed = Math.min(speed + 0.01, maxSpeed);
+            nextDir = "Gas";
         }
 
         if (map["b"] || map["s"]) {
             speed = Math.max(speed - 0.01, minSpeed);
-
+            nextDir = "Brake";
         }
 
         if (direction_name == "Left") {
@@ -656,6 +672,42 @@ function Car0(scene, camera) {
             }
         }
 
+        if (nextDir!=currentDir){
+            // change dir
+            if (currentDir == undefined){
+                // start a record
+                startPosition = {
+                    x: sphere.position.x,
+                    y: sphere.position.y,
+                    z: sphere.position.z
+                };
+                currentDir = nextDir;
+                startDirTime = currentTime;
+            }
+            else{
+                // end a record
+                endDirTime = currentTime;
+                var endPosition = {
+                    x: sphere.position.x,
+                    y: sphere.position.y,
+                    z: sphere.position.z
+                };
+                loggedData.log_time_stamps(startDirTime, endDirTime, startPosition, endPosition, currentDir);
+                loggerData.log_speed_report(startDirTime, endDirTime, speed);
+                currentDir = nextDir;
+                if (nextDir!=undefined){
+                    // another op right after this
+                    startPosition = endPosition;
+                    startDirTime = currentTime;
+                }
+            }
+            
+        }
+
+
+
         currentTime += engine.getDeltaTime() / 1000;
+        // update next diration
+        nextDir = undefined;
     }
 }
