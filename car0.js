@@ -36,7 +36,7 @@ function Car0(scene, camera) {
     var state = "DRIVING";
     //var state = "DRIVING";
     var speed = 0; //.25
-    var maxSpeed = .5; //.25
+    var maxSpeed = 1; //.25
     var minSpeed = 0; //.25
   
     var slowed = false;
@@ -75,11 +75,13 @@ function Car0(scene, camera) {
     var list = ["bread", "milk", "VHS", "book", "flowers", "bananas", "coffee", "music cd"];
   
     const todoList = document.querySelector("#todoList");
-    $(todoList).append(`<div class="todoItem">${list[r[0]-1]}</div>`)
-    $(todoList).append(`<div class="todoItem">${list[r[1]-1]}</div>`)
-    $(todoList).append(`<div class="todoItem">${list[r[2]-1]}</div>`)
-    $(todoList).append(`<div class="todoItem">${list[r[3]-1]}</div>`)
-    $(todoList).append(`<div class="todoItem">${list[r[4]-1]}</div>`)
+    // $(todoList).append(`<div class="todoItem">${list[r[0]-1]}</div>`)
+    // $(todoList).append(`<div class="todoItem">${list[r[1]-1]}</div>`)
+    // $(todoList).append(`<div class="todoItem">${list[r[2]-1]}</div>`)
+    // $(todoList).append(`<div class="todoItem">${list[r[3]-1]}</div>`)
+    // $(todoList).append(`<div class="todoItem">${list[r[4]-1]}</div>`)
+
+    const tdl = new ListTodoList(list.slice(0, 5), "list", todoList);
   
   
   
@@ -297,7 +299,7 @@ function Car0(scene, camera) {
     // game system time >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     var currentTime = 0.0;
   
-    var loggedData = new Data("temp", "todo list", false);
+    var loggedData = new Data("temp", tdl.todoStyle, false);
   
     var startDirTime = 0.0;
   
@@ -528,14 +530,15 @@ function Car0(scene, camera) {
                     closestCollider.pickUp();
                     closestCollider.pickedUp = true;
                     pickUpSound.play();
-                    for (var i = 0; i < 5; i++) {
-                        // if (closestCollider.pickUpId == texts[i].text) {
-                        if (closestCollider.pickUpId == todoList.children[i].textContent) {
-                            // texts[i].color = "green";
-                            todoList.children[i].classList.add("crossOut")
-                            $(todoList.children[i]).append(`<i class="fas fa-check"></i>`)
-                        }
-                    }
+                    tdl.crossOut(closestCollider.pickUpId);
+                    // for (var i = 0; i < 5; i++) {
+                    //     // if (closestCollider.pickUpId == texts[i].text) {
+                    //     if (closestCollider.pickUpId == todoList.children[i].textContent) {
+                    //         // texts[i].color = "green";
+                    //         todoList.children[i].classList.add("crossOut")
+                    //         $(todoList.children[i]).append(`<i class="fas fa-check"></i>`)
+                    //     }
+                    // }
   
                 }
             } else if (closestColliderCount < 120) {
@@ -548,17 +551,17 @@ function Car0(scene, camera) {
   
                 if (closestColliderCount == 180) {
                     closestCollider = null;
-                    var gameOver = true;
-                    for (var i = 0; i < 5; i++) {
-                        gameOver = gameOver && todoList.children[i].classList.contains("crossOut");
-                    }
+                    var gameOver = tdl.completed();
+                    // for (var i = 0; i < 5; i++) {
+                    //     gameOver = gameOver && todoList.children[i].classList.contains("crossOut");
+                    // }
                     if (gameOver) {
-                        loggedData.process(true);
+                        loggedData.process(tdl.completed());
                         
                         // TODO: send loggedData via API
                         console.log(loggedData);
 
-                        location.reload();
+                        // location.reload();
                     }
                     //speed = maxSpeed;
                     stopped = false;
