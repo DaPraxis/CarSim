@@ -34,7 +34,7 @@ class Data {
             start_coor: start_coor,
             end_coor: end_coor,
             operation: operation
-        }
+        };
         this.time_stamps = [...this.time_stamps, obj]
     }
 
@@ -47,7 +47,7 @@ class Data {
             start_time: start_time,
             end_time: end_time,
             speed_mode: speed_mode
-        }
+        };
         this.speed_report = [...this.speed_report, obj];
     }
 
@@ -56,11 +56,11 @@ class Data {
     }
 
     log_NPC(start_time, NPC, complete) {
-        var obj = {
+        let obj = {
             start_time: start_time,
             NPC: NPC,
             complete: complete
-        }
+        };
         this.NPCs = [...this.NPCs, obj];
     }
 
@@ -73,7 +73,7 @@ class Data {
             start_time: start_time,
             end_time: end_time,
             object: object
-        }
+        };
         this.collisions = [...this.collisions, obj];
     }
 
@@ -81,10 +81,10 @@ class Data {
     // can be overwritten any time
     process(todo_status) {
         this.input_aggregate.num_inputs = this.time_stamps.length;
-        maxTime = 0
-        if (len(this.time_stamps) >= 2) {
-            for (let i = 1; i < len(this.time_stamps); i += 1) {
-                timeBetween = this.time_stamps[i].start_time - this.time_stamps[i - 1].end_time;
+        let maxTime = 0;
+        if (this.time_stamps.length >= 2) {
+            for (let i = 1; i < this.time_stamps.length; i += 1) {
+                let timeBetween = this.time_stamps[i].start_time - this.time_stamps[i - 1].end_time;
                 if (timeBetween > maxTime) {
                     maxTime = timeBetween;
                 }
@@ -95,19 +95,17 @@ class Data {
         this.input_aggregate.collisions = this.collisions.length;
 
         this.input_aggregate.collision_time = 0;
-        for (temp of this.collisions) {
+        for (let temp of this.collisions) {
             this.input_aggregate.collision_time += temp.end_time - temp.start_time;
         }
         this.interactions.all_interactions = this.NPCs.length;
         this.interactions.completed_interactions = 0;
-        for (temp of this.NPCs) {
+        for (let temp of this.NPCs) {
             if (temp.complete) {
                 this.interactions.completed_interactions += 1;
             }
         }
         this.todo_finished = todo_status;
-
-        
     }
 
 
