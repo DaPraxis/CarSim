@@ -81,7 +81,7 @@ if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined
 
 
       //car = new Car(scene, assetsManager, camera);
-      car_ = new Car0(scene, camera);
+      car_ = new Car0(scene, camera, "List");
     //  car_.changePosition( new BABYLON.Vector3(-5,3,0));
       car_.changePosition( new BABYLON.Vector3(-80,6,0));
       car_.changeRotation( new BABYLON.Vector3(0, Math.PI / 2, 0));

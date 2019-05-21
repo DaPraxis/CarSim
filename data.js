@@ -1,5 +1,5 @@
 class Data {
-    constructor(userId, todo_style, off_road) {
+    constructor(userId, todo_style, off_road, speedEngine) {
         // userId: string
         this.userId = userId;
         // settings: object for config options
@@ -7,6 +7,8 @@ class Data {
         // todo style: string representing whether objectives are in todo list,
         //             in single objective format, or etc
         this.settings.todo_style = todo_style;
+        // speed engine, with speed offset
+        this.speedEngine = speedEngine;
         // off_road: bool representing whether or not the user can go off road
         this.off_road = off_road;
         // dateTime: datetime at start of game
@@ -42,11 +44,12 @@ class Data {
         return this.speed_report;
     }
 
-    log_speed_report(start_time, end_time, speed_mode) {
+    log_speed_report(start_time, end_time, speed, acc_acceleration) {
         let obj = {
             start_time: start_time,
             end_time: end_time,
-            speed_mode: speed_mode
+            speed: speed,
+            instant_end_acceleration: acc_acceleration
         };
         this.speed_report = [...this.speed_report, obj];
     }

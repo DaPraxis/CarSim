@@ -1111,7 +1111,6 @@ function makePeople(scene, filename, filewidth, fileheight, width, height, posit
   collider.isVisible = true;
   collider.position = position;
   collider.object = sprite;
-  collider.personName = filename;
 
   var sound = new BABYLON.Sound("sound", "examples/assets/music/quotes/" + filename + ".mp3", scene, null, {loop: false, volume: 0.3, autoplay: false});
   collider.sound = sound;

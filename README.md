@@ -1,2 +1,5 @@
-# CarSim
-IML lab car simmulation game design
+# centivizer_car_game
+A car game
+
+Centivizer wiki:
+https://bitbucket.org/farzadnej/centivizer/wiki/Home

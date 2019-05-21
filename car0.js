@@ -1,4 +1,4 @@
-function Car0(scene, camera) {
+function Car0(scene, camera, gameMode) {
 
     sphere = BABYLON.Mesh.CreateBox("sphere1", 2, scene);
     sphere.isVisible = true;
@@ -10,6 +10,8 @@ function Car0(scene, camera) {
     carTarget.parent = car;
     carTarget.position = new BABYLON.Vector3(0, 0, 10);
     carTarget.isVisible = true;
+
+    this.speedEngine = new speedEngine(gameMode);
   
     this.changePosition = function (newPos) {
         sphere.position = newPos;
@@ -28,16 +30,17 @@ function Car0(scene, camera) {
     }
   
     this.setSpeed = function(newSpeed) {
-        speed = newSpeed;
+        this.speedEngine.setSpeed(newSpeed);
     }
   
     //console.log(car);
   
     var state = "DRIVING";
     //var state = "DRIVING";
-    var speed = 0; //.25
-    var maxSpeed = 1; //.25
-    var minSpeed = 0; //.25
+    // var speed = 0; //.25
+    // var maxSpeed = 1; //.25
+    // var minSpeed = 0; //.25
+
   
     var slowed = false;
     var stopped = false;
@@ -80,8 +83,17 @@ function Car0(scene, camera) {
     // $(todoList).append(`<div class="todoItem">${list[r[2]-1]}</div>`)
     // $(todoList).append(`<div class="todoItem">${list[r[3]-1]}</div>`)
     // $(todoList).append(`<div class="todoItem">${list[r[4]-1]}</div>`)
-
-    const tdl = new ListTodoList(list.slice(0, 5), "list", todoList);
+    var tdl;
+    switch(gameMode){
+        case "List": 
+            tdl = new ListTodoList(list.slice(0, 5), "list", todoList);
+        case "Objective":
+            // TODO: implement it
+            break;
+        default: 
+            tdl = new ListTodoList(list.slice(0, 5), "list", todoList);
+    }
+    
   
   
   
@@ -299,7 +311,7 @@ function Car0(scene, camera) {
     // game system time >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     var currentTime = 0.0;
   
-    var loggedData = new Data("temp", tdl.todoStyle, false);
+    var loggedData = new Data("temp", tdl.todoStyle, false, this.speedEngine);
   
     var startDirTime = 0.0;
   
@@ -376,13 +388,13 @@ function Car0(scene, camera) {
         }
   
         if (map["c"] || map["w"]) {
-            speed = Math.min(speed + 0.01, maxSpeed);
+            this.speedEngine.gas(currentTime - startDirTime);
             nextDir = "Gas";
             console.log(loggedData);
         }
   
         if (map["b"] || map["s"]) {
-            speed = Math.max(speed - 0.01, minSpeed);
+            this.speedEngine.brake(currentTime - startDirTime);
             nextDir = "Brake";
             console.log(loggedData);
         }
@@ -630,6 +642,7 @@ function Car0(scene, camera) {
   
         if (state == "DRIVING") {
             if (!hit) {
+                speed = this.speedEngine.getSpeed();
                 //console.log(direction);
                 var rotationSpeed = .01; //.01
   
@@ -640,7 +653,6 @@ function Car0(scene, camera) {
                         sphere.rotation.y -= rotationSpeed;
                     }
                 //sphere.rotation.y += (direction_v.rotation.y - Math.PI / 2) / 5
-  
                     if (slowed) {
                         sphere.position.x += direction.x * speed/2;
                         sphere.position.y += direction.y * speed/2;
@@ -705,7 +717,7 @@ function Car0(scene, camera) {
                     z: sphere.position.z
                 };
                 loggedData.log_time_stamps(startDirTime, endDirTime, startPosition, endPosition, currentDir);
-                loggedData.log_speed_report(startDirTime, endDirTime, speed);
+                loggedData.log_speed_report(startDirTime, endDirTime, speed, this.speedEngine.getAcceleration(currentDir, currentTime-startDirTime));
                 currentDir = nextDir;
                 if (nextDir!=undefined){
                     // another op right after this
