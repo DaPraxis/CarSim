@@ -769,7 +769,7 @@ function fillIn(scene, array, assetsManager) {
 }
 
 //THE ONE
-function makeRoad2(scene, assetsManager, car) {
+function makeRoad2(scene, assetsManager, car, todoItems) {
 
 //console.log(car);
   // var array = [
@@ -935,14 +935,14 @@ function makeRoad2(scene, assetsManager, car) {
 
   // TODO LIST!!
 
-  const todoList = document.querySelector("#todoList");
-  let itemsArray = [];
+  // const todoList = document.querySelector("#todoList");
+  let itemsArray = todoItems;
 
   //console.log(todoList.children);
-  for (let item of todoList.children) {
+  // for (let item of todoList.children) {
     //console.log(item.textContent);
-    itemsArray.push(item.textContent);
-  }
+    // itemsArray.push(item.textContent);
+  // }
 
   console.log(itemsArray);
   //let babylonArray = [];

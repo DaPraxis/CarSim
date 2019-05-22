@@ -1,13 +1,13 @@
 class TodoList {
-	// Abstract class for todo lists, to allow for a common public interface
+	// Abstract class for todolists, to allow for a common public interface
 	
-	constructor(items, todoStyle, domObject) {
+	constructor(items, domObject) {
 		// items: array of strings
 		// todoStyle: string
 
 		this.items = items;
 		this.remaining = items.length;
-		this.todoStyle = todoStyle;
+		this.todoStyle = "abstract";
 		this.domObject = domObject
 	}
 
@@ -17,22 +17,25 @@ class TodoList {
 		throw "Error: crossOut not implemented for abstract TodoList class."
 	}
 
-	// returns true iff every item on the todo list has been dealt with
+	// returns true iff every item on the todolist has been dealt with
 	completed() {
-		console.log("completed!");
 		return this.remaining === 0;
+	}
+
+	inList(item) {
+		return item in this.items;
 	}
 }
 
 class ListTodoList extends TodoList {
-	// List-style todo lists, aka the default
+	// List-style todolists, aka the default
 
-	constructor(items, todoStyle, domObject) {
-		super(items, "list", domObject);
+	constructor(items, domObject) {
+		super(items, domObject);
+		this.todoStyle = "list";
 		for (let item of items) {
 			$(this.domObject).append(`<div class="todoItem">${item}</div>`);
 		}
-		// TODO: display todo list on screen
 	}
 
 	crossOut(item) {
@@ -51,27 +54,35 @@ class ListTodoList extends TodoList {
 }
 
 class ObjectiveTodoList extends TodoList {
-	// Objective-style todo list, aka will display only one objective at a time
+	// Objective-style todolist, aka will display only one objective at a time
 	// Current objective is the top of the stack of items, aka the last item in
 	// this.items
 
-	constructor(items, todoStyle, domObject) {
-		super(items, "objective", domObject);
-		$(this.domObject).append(`<div class="todoItem">${this.items[this.remaining - 1]}</div>`);
+	constructor(items, domObject) {
+		super(items, domObject);
+		this.todoStyle = "objective";
+		this.current = 0;
+		$(domObject).append(`<div class="todoItem">${items[this.current]}</div>`);
 	}
 
-	// TODO: currently does not work!
 	crossOut(item) {
-		if (this.items.indexOf(item) === this.remaining - 1) {
+		if (this.items[this.current] === item) {
 			// TODO: display next objective
-			let domItem = this.domObject.children[5 - this.remaining];
+			let domItem = this.domObject.children[this.current];
 			domItem.classList.add("crossOut");
 			$(domItem).append(`<i class="fas fa-check"></i>`);
 			this.remaining -= 1;
-			$(this.domObject).append(`<div class="todoItem">${this.items[this.remaining - 1]}</div>`);
+			this.current += 1;
+			if (this.remaining !== 0) {
+				$(this.domObject).append(`<div class="todoItem">${this.items[this.current]}</div>`);
+			}
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	inList(item) {
+		return this.items[this.current] === item;
 	}
 }

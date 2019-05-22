@@ -1,6 +1,6 @@
 // A to turn left D to turn right SPACE to accelerate.
 //Click on the car before pressing any keys.
-if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined") {
+if (typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined") {
 
    var resumeAudio = function() {
 
@@ -79,9 +79,23 @@ if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined
 
       /*****************************Add City********************************************/
 
+      var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      var n;
+      var r=[];
+      for (n=1; n<=5; ++n)
+      {
+          var i = Math.floor((Math.random() * (8-n)) );
+          r.push(a[i]);
+          a[i] = a[8-n];
+      }
+      //console.log(r);
+      // var r = [1,2,3,4,5];
+      var list = ["bread", "milk", "VHS", "book", "flowers", "bananas", "coffee", "music cd"];
+      const todoListDOM = document.querySelector("#todoList");
+      const todoList = new ObjectiveTodoList(list.slice(0, 5), todoListDOM);
 
       //car = new Car(scene, assetsManager, camera);
-      car_ = new Car0(scene, camera, "List");
+      car_ = new Car0(scene, camera, "List", todoList);
     //  car_.changePosition( new BABYLON.Vector3(-5,3,0));
       car_.changePosition( new BABYLON.Vector3(-80,6,0));
       car_.changeRotation( new BABYLON.Vector3(0, Math.PI / 2, 0));
@@ -89,7 +103,7 @@ if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined
       var updatingTrees = false;
 
 
-      var values = makeRoad2(scene, assetsManager, car_);
+      var values = makeRoad2(scene, assetsManager, car_, todoList.items);
       //var values = generateTerrain(scene,assetsManager);
       var sinas = values[0];
       var trees = values[1];
@@ -166,7 +180,7 @@ if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined
       // Calculate the area of a triangle
       function area(A, B, C) {
         // det of the matrix
-        var area = Math.abs((A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])) / 2.0)
+        var area = Math.abs((A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])) / 2.0);
         return area
       }
 
@@ -175,17 +189,17 @@ if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined
         // Calculate area of triangle ABC
         let A0 = area (A, B, C);
         // Calculate area of triangle PBC
-        let A1 = area (P, B, C)
+        let A1 = area (P, B, C);
         // Calculate area of triangle PAC
-        let A2 = area (P, A, C)
+        let A2 = area (P, A, C);
         // Calculate area of triangle PAB
-        let A3 = area (P, A, B)
+        let A3 = area (P, A, B);
         // Check if sum of A1, A2 and A3
         // is same as A
         // var hello = A1 + A2 + A3
         // console.log(A0, hello)
         //A2 AND A3 DONT WORKd
-        if (Math.abs(A0 - ( A1 + A2 + A3)) < 0.1){
+        if (Math.abs(A0 - ( A1 + A2 + A3)) < 0.1) {
           return true
         } else {
           return false
